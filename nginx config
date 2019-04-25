@@ -1,0 +1,157 @@
+#location: /etc/nginx/sties-available/default
+#edit this file with below mentioned code
+
+upstream userserver {
+        server 127.0.0.1:5000;
+        server 127.0.0.1:5001;
+        server 127.0.0.1:5002;
+}
+
+upstream articleserver {
+        server 127.0.0.1:5100;
+        server 127.0.0.1:5101;
+        server 127.0.0.1:5102;
+}
+
+upstream commentserver {
+        server 127.0.0.1:5200;
+        server 127.0.0.1:5201;
+        server 127.0.0.1:5202;
+}
+
+upstream tagserver {
+        server 127.0.0.1:5300;
+        server 127.0.0.1:5301;
+        server 127.0.0.1:5302;
+}
+
+upstream syndicateserver {
+        server 127.0.0.1:5400;
+        server 127.0.0.1:5401;
+        server 127.0.0.1:5402;
+}
+
+
+
+
+server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+
+        root /Desktop/Scaling-blog;
+
+                # Add index.php to the list if you are using PHP
+                index index.html index.htm index.nginx-debian.html;
+
+                server_name _;
+
+                location / {
+                        # First attempt to serve request as file, then
+                        # as directory, then fall back to displaying a 404.
+                        try_files $uri $uri/ =404;
+                }
+
+                location /display {
+                        auth_request /auth;
+                        proxy_pass "http://userserver/display";
+                }
+
+                location /createuser {
+                        proxy_pass "http://userserver/createuser";
+                }
+
+                location /deleteuser {
+                        auth_request /auth;
+                        proxy_pass "http://userserver/deleteuser";
+                }
+
+                location /updatepassword {
+                        auth_request /auth;
+                        proxy_pass "http://userserver/updatepassword";
+                }
+
+                location /postarticle {
+                        auth_request /auth;
+                        proxy_pass "http://articleserver/postarticle";
+                }
+
+                location /articles/ {
+                        proxy_pass "http://articleserver/articles/";
+                }
+
+                location /editarticle/ {
+                        auth_request /auth;
+                        proxy_pass "http://articleserver/editarticle/";
+                }
+
+                location /deletearticle/ {
+
+                                auth_request /auth;
+                                proxy_pass "http://articleserver/deletearticle/";
+                        }
+
+                        location /recentarticle/ {
+                                proxy_pass "http://articleserver/recentarticle/";
+                        }
+
+                        location /metaarticle/ {
+                                proxy_pass "http://articleserver/metaarticle/";
+                        }
+
+                        location /addcomment/ {
+                                proxy_pass "http://commentserver/addcomment/";
+                        }
+
+                        location /articles/comments/countcomment/ {
+                                proxy_pass "http://commentserver/articles/comments/countcomment/";
+                        }
+
+                        location /deletecomment/ {
+                                auth_request /auth;
+                                proxy_pass "http://commentserver/deletecomment/";
+                        }
+
+                        location /articles/comments/recentcomments/ {
+                                proxy_pass "http://commentserver/articles/comments/recentcomments/";
+                        }
+
+                        location  /tag/addtag {
+                                auth_request /auth;
+                                proxy_pass "http://tagserver/tag/addtag";
+                        }
+
+                        location /tag/deletetag {
+                                auth_request /auth;
+                                proxy_pass "http://tagserver/tag/deletetag";
+                        }
+
+                        location /tag/gettag/ {
+                                proxy_pass "http://tagserver/tag/gettag/";
+                        }
+
+                        location /tag/getarticles/ {
+                                        proxy_pass "http://tagserver/tag/getarticles/";
+                                }
+
+                                location /summary {
+                                                proxy_pass "http://syndicateserver/summary";
+                                        }
+
+                                        location /feed {
+                                                proxy_pass "http://syndicateserver/feed";
+                                        }
+
+                                        location /comments {
+                                                proxy_pass "http://syndicateserver/comments";
+                                        }
+
+
+                                location = /auth {
+                                        internal;
+                                        proxy_method           POST;
+                                        proxy_pass             "http://userserver/authentication";
+                                        proxy_pass_request_body off;
+                                        proxy_set_header        Content-Length "";
+                                        proxy_set_header        X-Originali-URI $request_uri;
+                                }
+}

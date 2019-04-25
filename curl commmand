@@ -1,0 +1,119 @@
+url command
+
+
+create user
+
+curl -i -H "Content-Type: application/json" -X POST  http://localhost/createuser -d '{"name": "karan", "email": "karan@gmail.com", "password":"abc"}'
+
+curl -i -H "Content-Type: application/json" -X POST  http://localhost/createuser -d '{"name": "shailavi", "email": "shailavi@gmail.com", "password":"def"}'
+
+curl -i -H "Content-Type: application/json" -X POST  http://localhost/createuser -d '{"name": "samit", "email": "samit@gmail.com", "password":"ghi"}'
+
+————————————————————————————
+
+DeleteUser
+
+curl -i -u karan@gmail.com:abc -H "Content-Type: application/json" -X DELETE http://localhost/deleteuser
+
+curl -i -u shailavi@gmail.com:def -H "Content-Type: application/json" -X DELETE http://localhost/deleteuser
+
+curl -i -u samit@gmail.com:ppp -H "Content-Type: application/json" -X DELETE http://localhost/deleteuser
+
+————————————————————————————
+
+update password
+
+curl -i -u samit@gmail.com:ghi -H "Content-Type: application/json" -X PATCH http://localhost/updatepassword -d '{"new_password":"ppp"}'
+
+————————————————————————————
+
+Create Article
+
+curl -i -u shailavi@gmail.com:def -H "Content-Type: application/json" -X POST http://localhost/postarticle -d '{"title":"second title","content":"second Content"}'
+
+curl -i -u karan@gmail.com:abc -H "Content-Type: application/json" -X POST http://localhost/postarticle -d '{"title":"karan title","content":"karan Content"}'
+
+curl -i -u samit@gmail.com:ghi -H "Content-Type: application/json" -X POST http://localhost/postarticle -d '{"title”:”samit second title","content”:”samit second Content"}'
+
+————————————————————————————
+
+get article
+
+curl -i -H "Content-Type: application/json" -X GET http://localhost/articles/2
+
+————————————————————————————
+
+edit article
+
+curl -i -u karan@gmail.com:abc -H "Content-Type: application/json" -X PATCH http://localhost/editarticle/1 -d '{"title": "samit second title","content":"samit second Content"}'
+
+————————————————————————————
+
+delete article
+
+curl -i -u karan@gmail.com:abc -H "Content-Type: application/json" -X DELETE http://localhost/deletearticle/1
+
+————————————————————————————
+
+recent article
+
+curl -i -H "Content-Type: application/json" -X GET http://localhost/recentarticle/3
+
+————————————————————————————
+
+meta article
+
+curl -i -H "Content-Type: application/json" -X GET http://localhost/metaarticle/3
+
+————————————————————————————
+
+add comment
+
+curl -i -u samit@gmail.com:ghi -H "Content-Type: application/json" -X POST http://localhost/addcomment/1 -d '{"comment_content":"first comment"}'
+
+————————————————————————————
+
+count comment
+
+curl -i -H "Content-Type: application/json" -X GET http://localhost/articles/comments/countcomment/2
+
+————————————————————————————
+
+delete comment
+
+curl -i -u shailavi@gmail.com:def -H "Content-Type: application/json" -X DELETE http://localhost/deletecomment/2
+
+————————————————————————————
+
+recent comments
+
+curl -i -H "Content-Type: application/json" -X GET http://localhost/articles/comments/1/1
+
+————————————————————————————
+
+add tag
+
+curl -i -u samit@gmail.com:ghi -H "Content-Type: application/json" -X POST -d '{"tag":"sampleTag1","articleId":"1"}' http://localhost/tag/addtag
+————————————————————————————
+
+delete addtag
+
+curl -u samit@gmai.com:ghi -H "Content-Type: application/json" -X DELETE -d '{"tag":"engineer","articleId":"2"}' http://localhost/tag/deletetag
+————————————————————————————
+
+retrive tags
+
+curl -H "Content-Type: application/json" -X GET http://localhost/tag/gettag/52
+————————————————————————————
+
+retrive urls
+
+curl -H "Content-Type: application/json" -X GET http://localhost/tag/getarticles/csuf
+
+————————————————————————————
+
+Syndication service
+
+curl -i -X GET  http://localhost/summary
+curl -i -X GET  http://localhost/comments
+curl -i -X GET  http://localhost/feed
